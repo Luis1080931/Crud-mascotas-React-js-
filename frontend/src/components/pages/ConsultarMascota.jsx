@@ -12,7 +12,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaAngleLeft } from "react-icons/fa6";
 
-const RegistrarMascota = () => {
+const ConsultarMascota = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const nombre = useRef(null)
@@ -78,74 +78,14 @@ const RegistrarMascota = () => {
         >
             <div className='flex mt-28 items-center justify-between'>
                 <FaAngleLeft className='mr-20 flex text-white text-xl cursor-pointer' onClick={volver} />
-                <label className='flex mr-20 text-white font-semibold'> Adicionar mascota </label>
+                <label className='flex mr-20 text-white font-semibold'> Consultar mascota </label>
                 <img className='flex justify-between rounded-full' src={iconClose} alt="" />
             </div>
             <div className='mt-16'>
                 <img className='rounded-full' src={photoIcon} alt="" />
             </div>
-             <form onSubmit={handleSubmit} className='w-full max-w-sm pt-24'>
-                <div className='mb-4'>
-                    <input
-                        type='text'
-                        id='nombre'
-                        placeholder='Nombre'
-                        ref={nombre}
-                        className='w-full bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5 placeholder-blue-950'
-                        style={{ height: '40px', width: '90%' }}
-                        required
-                    />
-                </div>
-                <div className='mb-4'>
-                    <select 
-                        className='w-[345px] bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
-                        ref={raza}
-                        name=""
-                        id=""
-                    >
-                        <option> Seleccione la raza... </option>
-                    </select>
-                </div>
-                <div className='mb-4'>
-                    <select 
-                        className='w-[345px] bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
-                        name="categoria"
-                        ref={categoria}
-                        id=""
-                    >
-                        <option> Seleccione categoria... </option>
-                    </select>
-                </div>
-                <div className='relative mb-4'>
-                    <input
-                        type='file'
-                        id='image'
-                        ref={image}
-                        className='w-full bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
-                        style={{ height: '40px', width: '90%' }}
-                        required
-                    />
-                    <img src={iconCamera} alt="camera" className="absolute top-0 right-8 mt-3 ml-3 rounded-full" style={{ width: '20px', height: '20px' }} />
-                </div>
-
-                <div className='mb-4'>
-                    <div className='relative'>
-                        <select 
-                            className='w-[345px] bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
-                            name="genero"
-                            ref={genero}
-                            id=""
-                        >
-                            <option> Seleccione genero... </option>
-                        </select>
-                    </div>
-                </div>
-               
-                <img className='rounded-full ml-4 cursor-pointer' style={{ width: '90%' }} src={save} alt="" />
-                
-            </form>
         </div>
     );
 }
 
-export default RegistrarMascota;
+export default ConsultarMascota;

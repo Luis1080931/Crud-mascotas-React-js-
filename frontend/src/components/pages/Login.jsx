@@ -34,12 +34,13 @@ const Login = () => {
                 if(response.status == 200){
                     localStorage.setItem("token", response.data.token)
                     Swal.fire({
-                        title: 'Error!',
+                        title: 'Genial!',
                         text: response.data.message,
                         icon: 'success',
                         confirmButtonText: 'Cool'
                       })
-                }else{
+                      navigate('/dashboard')
+                }else if(response.status == 404){
                     Swal.fire({
                         title: 'Error!',
                         text: response.data.message,
