@@ -1,19 +1,15 @@
-import React, { useRef, useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from 'react';
 import img from './../../../public/img/bg.jpg';
 import photoIcon from './../../../public/img/photo-lg-0.jpg'
 import iconClose from './../../../public/img/btn-close.jpg'
 import save from './../../../public/img/btn-save.jpg'
 import iconCamera from './../../../public/img/iconCameraPng.png'
-import iconEdit from './../../../public/img/btn-edit.jpg'
-import iconDelete from './../../../public/img/btn-delete.jpg'
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaAngleLeft } from "react-icons/fa6";
+import axiosClient from './../../service/axiosClient.js'
 
 const RegistrarMascota = () => {
-    const [showPassword, setShowPassword] = useState(false);
 
     const nombre = useRef(null)
     const raza = useRef(null)
@@ -21,6 +17,41 @@ const RegistrarMascota = () => {
     const image = useRef(null)
     const genero = useRef(null)
 
+    const [formData, setFormData] = useState({
+        nombre: '',
+        raza: '',
+        categoria: '',
+        image: '',
+        genero: ''
+    })
+
+    const [generos, setGeneros] = useState([])
+    const [razas, setRazas] = useState([])
+    const [categorias, setCategorias] = useState([])
+    const [users, setUsers] = useState([])
+
+    useEffect(() => {
+        axiosClient.get('/opciones/genero').then((response) => {
+            console.log(response.data);
+            setGeneros(response.data)
+        })
+
+        axiosClient.get('/opciones/razas').then((response) => {
+            console.log(response.data);
+            setRazas(response.data)
+        })
+
+        axiosClient.get('/opciones/categorias').then((response) => {
+            console.log(response.data);
+            setCategorias(response.data)
+        })
+
+        axiosClient.get('/opciones/users').then((response) => {
+            console.log(response.data);
+            setUsers(response.data)
+        })
+    }, [])
+ 
     const navigate = useNavigate()
 
     const volver = () => {
@@ -45,13 +76,13 @@ const RegistrarMascota = () => {
                 genero: generoValue,
             }
 
-            axios.post('http://localhost:3000/user/validar', data).then((response) => {
+            axiosClient.post('/mascotas/registrar', data).then((response) => {
                 console.log(response.data)
 
                 if(response.status == 200){
-                    localStorage.setItem("token", response.data.token)
+                    
                     Swal.fire({
-                        title: 'Genial!',
+                        title: response.data.message,
                         text: response.data.message,
                         icon: 'success',
                         confirmButtonText: 'Cool'
@@ -104,6 +135,9 @@ const RegistrarMascota = () => {
                         id=""
                     >
                         <option> Seleccione la raza... </option>
+                        {razas.map(race => (
+                            <option value={race.id}> {race.nombre_raza} </option>
+                        ))}
                     </select>
                 </div>
                 <div className='mb-4'>
@@ -114,6 +148,9 @@ const RegistrarMascota = () => {
                         id=""
                     >
                         <option> Seleccione categoria... </option>
+                        {categorias.map(category => (
+                            <option value={category.id}> {category.nombre} </option>
+                        ))}
                     </select>
                 </div>
                 <div className='relative mb-4'>
@@ -137,11 +174,16 @@ const RegistrarMascota = () => {
                             id=""
                         >
                             <option> Seleccione genero... </option>
+                            {generos.map(gender => (
+                                <option value={gender.id}> {gender.nombre} </option>
+                            ))}
                         </select>
                     </div>
                 </div>
-               
-                <img className='rounded-full ml-4 cursor-pointer' style={{ width: '90%' }} src={save} alt="" />
+                <button>
+                <img className='rounded-full ml-4 cursor-pointer' style={{ width: '90%' }} src={save} alt="" onSubmit={handleSubmit} />
+                </button>
+                
                 
             </form>
         </div>
