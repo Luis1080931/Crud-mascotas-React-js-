@@ -19,8 +19,8 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route element={<ProtectedRoute />} > 
                 <Route path="/dashboard" element={<ListarMascota />} />
-                <Route path="/register" element={<RegistrarMascota />} />
-                <Route path="/actualizar" element={<ActualizarMascota />} />
+                <Route path="/register" element={<RegistrarMascota mode="create" />} />
+                <Route path="/actualizar" element={<RegistrarMascota mode="update" />} />
                 <Route path="/consultar" element={<ConsultarMascota />} />
               </Route>
             </Routes>

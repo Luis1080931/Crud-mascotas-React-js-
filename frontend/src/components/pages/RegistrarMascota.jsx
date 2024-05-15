@@ -9,13 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaAngleLeft } from "react-icons/fa6";
 import axiosClient from './../../service/axiosClient.js'
 
-const RegistrarMascota = () => {
-
-    const nombre = useRef(null)
-    const raza = useRef(null)
-    const categoria = useRef(null)
-    const image = useRef(null)
-    const genero = useRef(null)
+const RegistrarMascota = ({mode}) => {
 
     const [formData, setFormData] = useState({
         nombre: '',
@@ -24,6 +18,17 @@ const RegistrarMascota = () => {
         image: '',
         genero: ''
     })
+    if(mode === "update"){
+        alert("sapo")
+    } else if(mode === "create"){
+        alert("sapo22")
+    }else {
+        alert("sapo3")
+    }
+
+    const handleChange = () => {
+        
+    }
 
     const [generos, setGeneros] = useState([])
     const [razas, setRazas] = useState([])
@@ -109,7 +114,7 @@ const RegistrarMascota = () => {
         >
             <div className='flex mt-28 items-center justify-between'>
                 <FaAngleLeft className='mr-20 flex text-white text-xl cursor-pointer' onClick={volver} />
-                <label className='flex mr-20 text-white font-semibold'> Adicionar mascota </label>
+                <label className='flex mr-20 text-white font-semibold'> {mode === "create" ? "Adicionar mascota" : "Actualizar mascota"} </label>
                 <img className='flex justify-between rounded-full' src={iconClose} alt="" />
             </div>
             <div className='mt-16'>
@@ -121,7 +126,7 @@ const RegistrarMascota = () => {
                         type='text'
                         id='nombre'
                         placeholder='Nombre'
-                        ref={nombre}
+                        value={formData.nombre}
                         className='w-full bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5 placeholder-blue-950'
                         style={{ height: '40px', width: '90%' }}
                         required
@@ -130,7 +135,7 @@ const RegistrarMascota = () => {
                 <div className='mb-4'>
                     <select 
                         className='w-[345px] bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
-                        ref={raza}
+                        value={formData.raza}
                         name=""
                         id=""
                     >
@@ -144,7 +149,7 @@ const RegistrarMascota = () => {
                     <select 
                         className='w-[345px] bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
                         name="categoria"
-                        ref={categoria}
+                        value={formData.categoria}
                         id=""
                     >
                         <option> Seleccione categoria... </option>
@@ -154,14 +159,62 @@ const RegistrarMascota = () => {
                     </select>
                 </div>
                 <div className='relative mb-4'>
-                    <input
-                        type='file'
-                        id='image'
-                        ref={image}
-                        className='w-full bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
-                        style={{ height: '40px', width: '90%' }}
-                        required
-                    />
+                <input
+          placeholder="Imagen de usuario"
+          type="file"
+          name="image"
+          className="hidden"
+          id="fileInput"
+          onChange={handleChange}
+        />
+        <label
+          htmlFor="fileInput"
+          className="cursor-pointer items-center w-auto flex justify-center bg-blue-100 rounded-full border"
+        >
+          {formData.image ? (
+            <div className="relative">
+              <button
+                type="button"
+                className="absolute top-0 right-0 p-1 bg-gray-300 rounded-full"
+                onClick={() => setFormData({ ...formData, image: "" })}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              {mode === "update" && typeof formData.imagen === "string" ? (
+                <img
+                  src={`http://localhost:4000/img/${formData.image}`}
+                  alt="user"
+                  className="h-28 w-28 object-cover rounded-full mx-auto"
+                />
+              ) : (
+                <img
+                  src={URL.createObjectURL(formData.imagen)}
+                  alt="user"
+                  className="h-28 w-28 object-cover rounded-full mx-auto"
+                />
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center w-28 h-28 border border-gray-300 rounded-full hover:bg-gray-50 transition duration-300">
+              <span className="text-gray-500 text-center">
+                Seleccionar imagen
+              </span>
+            </div>
+          )}
+        </label>
                     <img src={iconCamera} alt="camera" className="absolute top-0 right-8 mt-3 ml-3 rounded-full" style={{ width: '20px', height: '20px' }} />
                 </div>
 
@@ -170,7 +223,7 @@ const RegistrarMascota = () => {
                         <select 
                             className='w-[345px] bg-slate-500 px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5'
                             name="genero"
-                            ref={genero}
+                            value={formData.genero}
                             id=""
                         >
                             <option> Seleccione genero... </option>
