@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import img from './../../../public/img/bg.jpg';
 import photoIcon from './../../../public/img/photo-lg-0.jpg'
@@ -9,72 +9,39 @@ import iconEdit from './../../../public/img/btn-edit.jpg'
 import iconDelete from './../../../public/img/btn-delete.jpg'
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FaAngleLeft } from "react-icons/fa6";
+import { MascotasContext } from '../../context/MascotasContext';
 
-const ConsultarMascota = () => {
-    const [showPassword, setShowPassword] = useState(false);
+const ConsultarMascota = ({ match }) => {
 
-    const nombre = useRef(null)
-    const raza = useRef(null)
-    const categoria = useRef(null)
-    const image = useRef(null)
-    const genero = useRef(null)
+    const { mascota, getMascotasId } = useContext(MascotasContext);
+    const { id } = useParams();
 
+    useEffect(() => {
+        if (id) {
+            getMascotasId(id);
+            console.log(mascota);
+        } else {
+            console.error("ID is undefined");
+        }
+    }, [id]);
+
+    if (!mascota) {
+        return <div>Loading...</div>;
+    }
     const navigate = useNavigate()
 
     const volver = () => {
         navigate('/dashboard')
-    }
+    }   
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-        try {
-            const nombreValue = nombre.current.value
-            const razaValue = raza.current.value
-            const categoriaValue = categoria.current.value
-            const imageValue = image.current.value
-            const generoValue = genero.current.value
-
-            const data = {
-                nombre: nombreValue,
-                raza: razaValue,
-                categoria:categoriaValue,
-                image: imageValue,
-                genero: generoValue,
-            }
-
-            axios.post('http://localhost:3000/user/validar', data).then((response) => {
-                console.log(response.data)
-
-                if(response.status == 200){
-                    localStorage.setItem("token", response.data.token)
-                    Swal.fire({
-                        title: 'Genial!',
-                        text: response.data.message,
-                        icon: 'success',
-                        confirmButtonText: 'Cool'
-                      })
-                      navigate('/dashboard')
-                }else if(response.status == 404){
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.data.message,
-                        icon: 'success',
-                        confirmButtonText: 'Cool'
-                      })
-                }
-            })
-        } catch (error) {
-            
-        }
-    };
+    
 
     return (
         <div
             className='flex flex-col items-center min-h-screen'
-            style={{ backgroundImage: `url(${img})`, backgroundPosition: 'center', backgroundRepeat:'no-repeat' }}
+            style={{ backgroundImage: `url(${img})  `, backgroundPosition: 'center', backgroundRepeat:'no-repeat' }}
         >
             <div className='flex mt-28 items-center justify-between'>
                 <FaAngleLeft className='mr-20 flex text-white text-xl cursor-pointer' onClick={volver} />
@@ -82,9 +49,45 @@ const ConsultarMascota = () => {
                 <img className='flex justify-between rounded-full' src={iconClose} alt="" />
             </div>
             <div className='mt-16'>
-                <img className='rounded-full' src={photoIcon} alt="" />
+                <img className='rounded-full' src={`http://localhost:3000/img/${mascota[0].image}`} alt={mascota[0].image} />
             </div>
-        </div>
+            <div className='flex flex-col'>
+                <div className='flex flex-row mb-2'>
+                    <div className='bg-[#8090AC] h-10 w-28 flex justify-center items-center rounded-l-xl'>
+                        <label className='text-white text-lg font-semibold'>Nombre: </label>
+                    </div>
+                    <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].nombre_mascota} </label>
+                    </div>
+                </div>
+                <div className='flex flex-row mb-2'>
+                    <div className='bg-[#8090AC] h-10 w-28 flex justify-center items-center rounded-l-xl'>
+                        <label className='text-white text-lg font-semibold'>Raza: </label>
+                    </div>
+                    <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].raza} </label>
+                    </div>
+                </div>
+                <div className='flex flex-row mb-2'>
+                    <div className='bg-[#8090AC] h-10 w-28 flex justify-center items-center rounded-l-xl'>
+                        <label className='text-white text-lg font-semibold'>Categoria: </label>
+                    </div>
+                    <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].categoria} </label>
+                    </div>
+                </div>
+                <div className='flex flex-row mb-2'>
+                    <div className='bg-[#8090AC] h-10 w-28 flex justify-center items-center rounded-l-xl'>
+                        <label className='text-white text-lg font-semibold'>Genero: </label>
+                    </div>
+                    <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].genero} </label>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>  
     );
 }
 

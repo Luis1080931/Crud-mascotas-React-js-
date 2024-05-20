@@ -193,7 +193,7 @@ const RegistrarMascota = ({mode}) => {
                   />
                 </svg>
               </button>
-              {mode === "update" && typeof formData.imagen === "string" ? (
+              {mode === "update" && typeof formData.image === "string" ? (
                 <img
                   src={`http://localhost:4000/img/${formData.image}`}
                   alt="user"
@@ -201,7 +201,7 @@ const RegistrarMascota = ({mode}) => {
                 />
               ) : (
                 <img
-                  src={URL.createObjectURL(formData.imagen)}
+                  src={URL.createObjectURL(formData.image)}
                   alt="user"
                   className="h-28 w-28 object-cover rounded-full mx-auto"
                 />

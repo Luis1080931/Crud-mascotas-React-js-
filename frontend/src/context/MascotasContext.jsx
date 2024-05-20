@@ -2,9 +2,9 @@ import React, { Children, createContext, useState } from 'react'
 import axiosClient from '../service/axiosClient.js'
 import axios from 'axios'
 
-const MascotasContext = createContext()
+export const MascotasContext = createContext()
 
-const MascotasProvider = ({ children }) => {
+export const MascotasProvider = ({ children }) => {
 
     const [mascotas, setMascotas] = useState([])
     const [mascota, setMascota] = useState([])
@@ -20,15 +20,18 @@ const MascotasProvider = ({ children }) => {
         }
     }
 
-    const getMascotasId = (id) => {
+    const getMascotasId = async (id) => {
+        if (!id) {
+            console.error("No ID provided to getMascotasId");
+            return;
+        }
         try {
-            axiosClient.get(`/mascotas/buscar/${id}`).then((response) => {
-                setMascota(response.data)
-            })
+            const response = await axiosClient.get(`/mascotas/buscar/${id}`);
+            setMascota(response.data);
         } catch (error) {
             console.log('Error del servidor' + error);
         }
-    }
+    };
 
     const createMascotas = (data) => {
         try {
@@ -80,5 +83,3 @@ const MascotasProvider = ({ children }) => {
     </MascotasContext.Provider>
   )
 }
-
-export default MascotasContext
