@@ -4,27 +4,27 @@ import multer from "multer";
 
 const storage = multer.diskStorage(
     {
-        destination: function(req,imf,cd){
-            cd(null, 'public/img')
+        destination: function(req,file,cb){
+            cb(null, "public/img")
         },
-        filename: function(req,img, cd){
-            cd(null, img.originalname)
+        filename: function(req,file, cb){
+            cb(null, file.originalname)
         }
     }
 )
 
 const upload = multer({storage: storage})
-export const cargarImage = upload.single('img')
+export const cargarImage = upload.single('image')
 
 export const registrarMascota = async (req, res) => {
     try {
         
-        const {raza, genero, categoria, dueno} = req.body
+        const {nombre, raza, genero, categoria, dueno} = req.body
         let image = req.file.originalname
 
-        let sql = `INSERT INTO mascotas (raza, categoria, image, genero, dueno) VALUES (?, ?, ?, ?, ?)`
+        let sql = `INSERT INTO mascotas (nombre_mascota,fk_raza, fk_categoria, image, fk_genero, fk_dueno) VALUES (?, ?, ?, ?, ?, ?)`
 
-        const [rows] = await pool.query(sql, [raza, categoria, image, genero, dueno])
+        const [rows] = await pool.query(sql, [nombre,raza, categoria, image, genero, dueno])
 
         if(rows.affectedRows>0){
             res.status(200).json({
@@ -48,7 +48,7 @@ export const registrarMascota = async (req, res) => {
 
 export const listarMascotas = async (req, res) => {
     try {
-        let sql = `SELECT nombre AS raza, nombre AS categoria, nombre AS genero, nombre AS dueno, JOIN razas ON raza = id,  JOIN categorias ON categoria = id,  JOIN generos ON genero = id,  JOIN user ON dueno = id FROM mascotas`
+        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, nombres AS dueno, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero JOIN user ON fk_dueno = id_user`
 
         const [result] = await pool.query(sql)
         if(result.length>0){
@@ -100,7 +100,7 @@ export const buscarMascota = async (req, res) => {
     try {
         const {id} = req.params
 
-        let sql = `SELECT nombre AS raza JOIN razas ON raza = id, nombre AS categoria JOIN categorias ON categoria = id, nombre AS genero JOIN generos ON genero = id, nombre AS dueño JOIN user ON dueno = id FROM mascotas WHERE id = ?`
+        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, nombres AS dueno, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero JOIN user ON fk_dueno = id_user WHERE id = ?`
 
         const [rows] = await pool.query(sql, [id])
         if(rows.length>0){
