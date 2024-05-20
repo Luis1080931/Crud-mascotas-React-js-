@@ -10,10 +10,14 @@ import iconDelete from './../../../public/img/btn-delete.jpg'
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import RegistrarMascota from './RegistrarMascota';
 
 const ListarMascota = () => {
+    const [mode, setmode] = useState([])
+    const [abrirPage, setabrirPage] = useState(false)
 
     const navigate = useNavigate()
+
     const ir = () => {
         navigate('/register')
     }
@@ -21,9 +25,12 @@ const ListarMascota = () => {
     const actualizar = () => {
         navigate("/actualizar")
     }
+    const ajajja = () => {
+        navigate("/actualizar")
+    }
 
     const consultar = () => {
-        navigate('/consultar')
+       navigate('/consultar')
     }
 
     return (
@@ -53,7 +60,7 @@ const ListarMascota = () => {
                </div>
                <div className='flex flex-row ml-20'>
                     <img className='rounded-full mr-2 cursor-pointer' src={lupa} onClick={consultar} alt="" />
-                    <img className='rounded-full mr-2 cursor-pointer' src={iconEdit} onClick={actualizar} alt="" />
+                    <img className='rounded-full mr-2 cursor-pointer' src={iconEdit} onClick={() => ajajja()} alt="" />
                     <img className='rounded-full mr-2 cursor-pointer' src={iconDelete} alt="" />
                </div>
 
