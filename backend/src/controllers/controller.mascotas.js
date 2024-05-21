@@ -48,7 +48,7 @@ export const registrarMascota = async (req, res) => {
 
 export const listarMascotas = async (req, res) => {
     try {
-        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, nombres AS dueno, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero JOIN user ON fk_dueno = id_user`
+        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero`
 
         const [result] = await pool.query(sql)
         if(result.length>0){
@@ -70,11 +70,11 @@ export const listarMascotas = async (req, res) => {
 export const actualizarMascota = async (req, res) => {
     try {
         const {id} = req.params
-        const {raza, genero, categoria, image, dueno} = req.body
+        const {raza, genero, categoria } = req.body
 
-        let sql = `UPDATE mascotas SET raza = ?, genero = ?, categoria = ?, image = ?, dueno =  ?`
+        let sql = `UPDATE mascotas SET fk_raza = ?, fk_genero = ?, fk_categoria = ? WHERE id = ?`
         
-        const [rows] = await pool.query(sql, [raza, categoria, image, dueno, genero])
+        const [rows] = await pool.query(sql, [raza, genero, categoria, id])
 
         if(rows.affectedRows>0){
             res.status(200).json({
@@ -100,7 +100,7 @@ export const buscarMascota = async (req, res) => {
     try {
         const {id} = req.params
 
-        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, nombres AS dueno, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero JOIN user ON fk_dueno = id_user WHERE id = ?`
+        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero  WHERE id = ?`
 
         const [rows] = await pool.query(sql, [id])
         if(rows.length>0){

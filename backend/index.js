@@ -15,6 +15,8 @@ servidor.use('/mascotas', routeMascotas)
 servidor.use('/user', routeUser)
 servidor.use('/opciones', routeOpciones)
 
+servidor.use(express.static('./public'))
+
 servidor.listen(3000, () => {
     console.log('Servidor rodando na porta 3000');
 })
