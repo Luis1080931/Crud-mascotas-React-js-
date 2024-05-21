@@ -48,8 +48,8 @@ const ConsultarMascota = ({ match }) => {
                 <label className='flex mr-20 text-white font-semibold'> Consultar mascota </label>
                 <img className='flex justify-between rounded-full' src={iconClose} alt="" />
             </div>
-            <div className='mt-16'>
-                <img className='rounded-full' src={`http://localhost:3000/img/${mascota[0].image}`} alt={mascota[0].image} />
+            <div className='mt-16 mb-16'>
+                <img className='rounded-full w-40' src={`http://localhost:3000/img/${mascota[0].image}`} alt={mascota[0].image} />
             </div>
             <div className='flex flex-col'>
                 <div className='flex flex-row mb-2'>

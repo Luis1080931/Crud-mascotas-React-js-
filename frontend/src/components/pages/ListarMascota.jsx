@@ -15,7 +15,7 @@ import { MascotasContext } from '../../context/MascotasContext.jsx';
 
 const ListarMascota = () => {
     const [mascotas, setMascotas] = useState([]);
-    const { getMascotasId } = useContext(MascotasContext)
+    const { getMascotasId, setIdMascota } = useContext(MascotasContext)
 
     useEffect(() => {
         getMascotas();
@@ -34,8 +34,8 @@ const ListarMascota = () => {
         navigate('/register');
     };
 
-    const actualizar = (id) => {
-        navigate(`/actualizar/${id}`);
+    const actualizar = () => {
+        navigate(`/actualizar`);
     };
 
     const consultar = async (id) => {
@@ -48,7 +48,32 @@ const ListarMascota = () => {
         }
     };
     
-    
+    const eliminar = (id) => {
+        try {
+            axiosClient.delete(`/mascotas/eliminar/${id}`).then((response) => {
+                console.log(response.data)
+                if(response.status == 200){
+                    
+                    Swal.fire({
+                        title: response.data.message,
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Cool'
+                      })
+                      getMascotas()
+                }else if(response.status == 404){
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Cool'
+                      })
+                }
+            })
+        } catch (error) {
+            
+        }
+    }
 
     return (
         <div
@@ -70,7 +95,7 @@ const ListarMascota = () => {
                     className='flex items-center bg-slate-300 mt-4 w-[360px] rounded-2xl h-24'
                 >
                     <div>
-                        <img className='rounded-full ml-3' alt={mascota.image} /* src={`http://localhost:3000/mascotas/${mascota.image}`} */ src={mascota.image}/>
+                        <img className='rounded-full ml-3' alt={mascota.image} src={`http://localhost:3000/img/${mascota.image}`} />
                     </div>
                     <div className='flex flex-col ml-4'>
                         <label>{mascota.nombre_mascota}</label> 
@@ -78,8 +103,8 @@ const ListarMascota = () => {
                     </div>
                     <div className='flex flex-row ml-20'>
                         <img className='rounded-full mr-2 cursor-pointer' src={lupa} onClick={() => consultar(mascota.id)} alt="Consultar" />
-                        <img className='rounded-full mr-2 cursor-pointer' src={iconEdit} onClick={() => actualizar(mascota.id)} alt="Editar" />
-                        <img className='rounded-full mr-2 cursor-pointer' src={iconDelete} alt="Eliminar" />
+                        <img className='rounded-full mr-2 cursor-pointer' src={iconEdit} onClick={() => actualizar(setIdMascota(mascota.id))} alt="Editar" />
+                        <img className='rounded-full mr-2 cursor-pointer' src={iconDelete} alt="Eliminar" onClick={() => eliminar(mascota.id)} />
                     </div>
                 </div>
             ))}
