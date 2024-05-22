@@ -71,10 +71,11 @@ export const actualizarMascota = async (req, res) => {
     try {
         const {id} = req.params
         const {raza, genero, categoria } = req.body
+        let image = req.file.originalname
 
-        let sql = `UPDATE mascotas SET fk_raza = ?, fk_genero = ?, fk_categoria = ? WHERE id = ?`
+        let sql = `UPDATE mascotas SET fk_raza = ?, fk_genero = ?, fk_categoria = ?, SET image = ? WHERE id = ?`
         
-        const [rows] = await pool.query(sql, [raza, genero, categoria, id])
+        const [rows] = await pool.query(sql, [raza, genero, categoria, image, id])
 
         if(rows.affectedRows>0){
             res.status(200).json({
