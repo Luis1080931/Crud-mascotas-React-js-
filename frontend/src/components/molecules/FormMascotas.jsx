@@ -166,7 +166,7 @@ const FormMascotas = ({ mode }) => {
                     htmlFor="fileInput"
                     className="cursor-pointer items-center w-[345px] flex bg-[#8d9db9] rounded-full border"
                     >
-                    {formData.image ? (
+                    {/* {formData.image ? (
                         <div className="relative">
                         <button
                             type="button"
@@ -202,13 +202,13 @@ const FormMascotas = ({ mode }) => {
                             />
                         )}
                         </div>
-                    ) : (
+                    ) : ( */}
                         <div className="flex items-center w-[200px] h-10 transition duration-300">
                         <span className="text-blue-950 w-full ml-4">
                             Seleccionar imagen
                         </span>
                         </div>
-                    )}
+                   {/*  )} */}
                     </label>
                         <img src={iconCamera} alt="camera" className="absolute top-0 right-8 mt-3 ml-3 rounded-full" style={{ width: '20px', height: '20px' }} />
                     </div>

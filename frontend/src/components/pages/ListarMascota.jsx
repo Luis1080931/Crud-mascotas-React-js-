@@ -75,6 +75,11 @@ const ListarMascota = () => {
         }
     }
 
+    const logout = () => {
+        localStorage.clear();
+        navigate('/');
+    }
+
     return (
         <div
             className='flex flex-col items-center min-h-screen'
@@ -83,7 +88,7 @@ const ListarMascota = () => {
             <div className='flex flex-row mt-28 justify-center'>
                 <label className='text-white font-semibold'>Administrar Mascotas</label>
                 <div className='ml-10'>
-                    <img className='rounded-full cursor-pointer' src={iconClose} alt="Cerrar" />
+                    <img className='rounded-full cursor-pointer' src={iconClose} onClick={() => logout()} alt="Cerrar" />
                 </div>
             </div>
             <div className='mt-10'>

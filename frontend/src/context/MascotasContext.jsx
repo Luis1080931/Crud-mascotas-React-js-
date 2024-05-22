@@ -1,6 +1,8 @@
 import React, { Children, createContext, useState } from 'react'
 import axiosClient from '../service/axiosClient.js'
 import axios from 'axios'
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 export const MascotasContext = createContext()
 
@@ -36,7 +38,15 @@ export const MascotasProvider = ({ children }) => {
     const createMascotas = (data) => {
         try {
             axiosClient.post('/mascotas/registrar', data).then((response) => {
-                alert(response.data.message)
+                if(response.status === 200){
+                    Swal.fire({
+                        title: response.data.message,
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Cool'
+                      })
+                      getMascotas()
+                }
             })
         } catch (error) {
             console.log('Error del servidor' + error);
