@@ -12,8 +12,6 @@ import FormMascotas from '../molecules/FormMascotas.jsx';
 
 const RegistrarMascota = () => {
 
-    const [mode, setMode ] = useState('create')
-
     /* const [formData, setFormData] = useState({
         nombre: '',
         raza: '',
@@ -102,7 +100,7 @@ const RegistrarMascota = () => {
     }; */
 
     return (
-        <FormMascotas mode={mode} />
+        <FormMascotas />
         /* <div
             className='flex flex-col items-center min-h-screen'
             style={{ backgroundImage: `url(${img})`, backgroundPosition: 'center', backgroundRepeat:'no-repeat' }}

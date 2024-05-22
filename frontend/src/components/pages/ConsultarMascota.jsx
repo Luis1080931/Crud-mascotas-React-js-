@@ -49,7 +49,7 @@ const ConsultarMascota = ({ match }) => {
                 <img className='flex justify-between rounded-full' src={iconClose} alt="" />
             </div>
             <div className='mt-16 mb-16'>
-                <img className='rounded-full w-40' src={`http://localhost:3000/img/${mascota[0].image}`} alt={mascota[0].image} />
+                <img className='rounded-full w-40' src={`http://localhost:3000/img/${mascota.image}`} alt={mascota.image} />
             </div>
             <div className='flex flex-col'>
                 <div className='flex flex-row mb-2'>
@@ -57,7 +57,7 @@ const ConsultarMascota = ({ match }) => {
                         <label className='text-white text-lg font-semibold'>Nombre: </label>
                     </div>
                     <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
-                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].nombre_mascota} </label>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.nombre_mascota} </label>
                     </div>
                 </div>
                 <div className='flex flex-row mb-2'>
@@ -65,7 +65,7 @@ const ConsultarMascota = ({ match }) => {
                         <label className='text-white text-lg font-semibold'>Raza: </label>
                     </div>
                     <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
-                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].raza} </label>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.raza} </label>
                     </div>
                 </div>
                 <div className='flex flex-row mb-2'>
@@ -73,7 +73,7 @@ const ConsultarMascota = ({ match }) => {
                         <label className='text-white text-lg font-semibold'>Categoria: </label>
                     </div>
                     <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
-                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].categoria} </label>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.categoria} </label>
                     </div>
                 </div>
                 <div className='flex flex-row mb-2'>
@@ -81,7 +81,7 @@ const ConsultarMascota = ({ match }) => {
                         <label className='text-white text-lg font-semibold'>Genero: </label>
                     </div>
                     <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
-                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota[0].genero} </label>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.genero} </label>
                     </div>
                 </div>
 

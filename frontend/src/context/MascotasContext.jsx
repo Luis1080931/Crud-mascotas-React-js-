@@ -10,7 +10,8 @@ export const MascotasProvider = ({ children }) => {
 
     const [mascotas, setMascotas] = useState([])
     const [mascota, setMascota] = useState([])
-    const [idMascota, setIdMascota] = useState([])
+    const [idMascota, setIdMascota] = useState(0)
+    const [mode, setMode] = useState('create')
 
     const getMascotas = () => {
         try {
@@ -29,7 +30,7 @@ export const MascotasProvider = ({ children }) => {
         }
         try {
             const response = await axiosClient.get(`/mascotas/buscar/${id}`);
-            setMascota(response.data);
+            setMascota(response.data[0]);
         } catch (error) {
             console.log('Error del servidor' + error);
         }
@@ -79,6 +80,8 @@ export const MascotasProvider = ({ children }) => {
             idMascota, 
             mascotas,
             mascota,
+            mode,
+            setMode,
             setMascotas,
             setMascota,
             setIdMascota,

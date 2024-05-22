@@ -13,8 +13,6 @@ import FormMascotas from '../molecules/FormMascotas.jsx';
 
 const ActualizarMascota = () => {
 
-    const [mode, setMode] = useState('update')
-
     /* const { getMascotasId, mascota, setIdMascota } = useContext(MascotasContext);
     const { id } = useParams();
     const [generos, setGeneros] = useState([])
@@ -123,7 +121,7 @@ const ActualizarMascota = () => {
     }; */
 
     return (
-        <FormMascotas mode={mode} />
+        <FormMascotas />
         /* <div
             className='flex flex-col items-center min-h-screen'
             style={{ backgroundImage: `url(${img})`, backgroundPosition: 'center', backgroundRepeat:'no-repeat' }}

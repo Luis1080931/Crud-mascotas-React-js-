@@ -9,13 +9,12 @@ import iconDelete from './../../../public/img/btn-delete.jpg';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import RegistrarMascota from './RegistrarMascota';
 import axiosClient from '../../service/axiosClient.js';
 import { MascotasContext } from '../../context/MascotasContext.jsx';
 
 const ListarMascota = () => {
     const [mascotas, setMascotas] = useState([]);
-    const { getMascotasId, setIdMascota } = useContext(MascotasContext)
+    const { getMascotasId, setIdMascota, setMode } = useContext(MascotasContext)
 
     useEffect(() => {
         getMascotas();
@@ -23,7 +22,6 @@ const ListarMascota = () => {
 
     const getMascotas = () => {
         axiosClient.get(`/mascotas/listar`).then((response) => {
-            console.log(response.data);
             setMascotas(response.data);
         });
     };
@@ -31,15 +29,18 @@ const ListarMascota = () => {
     const navigate = useNavigate();
 
     const ir = () => {
+        setMode('create')
         navigate('/register');
     };
 
-    const actualizar = () => {
-        navigate(`/actualizar`);
+    const actualizar = (id) => {
+        setMode('update')
+        navigate(`/actualizar/${id}`);
+        setIdMascota(id)
     };
 
     const consultar = async (id) => {
-        console.log("Consultando ID:", id);  // Log para verificar el ID
+        console.log("Consultando ID:", id)
         if (id) {
             await getMascotasId(id);
             navigate(`/consultar/${id}`);
@@ -94,25 +95,27 @@ const ListarMascota = () => {
             <div className='mt-10'>
                 <img className='rounded-full cursor-pointer' src={buttonAdd} onClick={ir} alt="Agregar" />
             </div>
-            {mascotas.map((mascota) => (
-                <div
-                    key={mascota.id}
-                    className='flex items-center bg-slate-300 mt-4 w-[360px] rounded-2xl h-24'
-                >
-                    <div>
-                        <img className='rounded-full ml-3' alt={mascota.image} src={`http://localhost:3000/img/${mascota.image}`} />
+            <div className='flex flex-col items-center w-[400px] max-w-4xl overflow-hidden mt-6' style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                {mascotas.map((mascota) => (
+                    <div
+                        key={mascota.id}
+                        className='flex items-center bg-slate-300 mt-4 w-[360px] rounded-2xl h-24'
+                    >
+                        <div>
+                            <img className='rounded-full ml-3' alt={mascota.image} src={`http://localhost:3000/img/${mascota.image}`} />
+                        </div>
+                        <div className='flex flex-col ml-4'>
+                            <label>{mascota.nombre_mascota}</label> 
+                            <label>{mascota.nombre_raza}</label>
+                        </div>
+                        <div className='flex flex-row ml-20'>
+                            <img className='rounded-full mr-2 cursor-pointer' src={lupa} onClick={() => consultar(mascota.id)} alt="Consultar" />
+                            <img className='rounded-full mr-2 cursor-pointer' src={iconEdit} onClick={() => actualizar(mascota.id)} alt="Editar" />
+                            <img className='rounded-full mr-2 cursor-pointer' src={iconDelete} alt="Eliminar" onClick={() => eliminar(mascota.id)} />
+                        </div>
                     </div>
-                    <div className='flex flex-col ml-4'>
-                        <label>{mascota.nombre_mascota}</label> 
-                        <label>{mascota.raza}</label>
-                    </div>
-                    <div className='flex flex-row ml-20'>
-                        <img className='rounded-full mr-2 cursor-pointer' src={lupa} onClick={() => consultar(mascota.id)} alt="Consultar" />
-                        <img className='rounded-full mr-2 cursor-pointer' src={iconEdit} onClick={() => actualizar(setIdMascota(mascota.id))} alt="Editar" />
-                        <img className='rounded-full mr-2 cursor-pointer' src={iconDelete} alt="Eliminar" onClick={() => eliminar(mascota.id)} />
-                    </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 }
