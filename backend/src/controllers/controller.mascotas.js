@@ -48,7 +48,11 @@ export const registrarMascota = async (req, res) => {
 
 export const listarMascotas = async (req, res) => {
     try {
-        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero`
+        let sql = `SELECT id, nombre_mascota, r.*, nombre_categoria AS categoria, nombre_genero AS genero, image 
+        FROM mascotas m
+        JOIN razas r ON fk_raza = id_raza 
+        JOIN categorias ON fk_categoria = id_categoria 
+        JOIN generos ON fk_genero = id_genero`
 
         const [result] = await pool.query(sql)
         if(result.length>0){
@@ -73,7 +77,7 @@ export const actualizarMascota = async (req, res) => {
         const {raza, genero, categoria } = req.body
         let image = req.file.originalname
 
-        let sql = `UPDATE mascotas SET fk_raza = ?, fk_genero = ?, fk_categoria = ?, SET image = ? WHERE id = ?`
+        let sql = `UPDATE mascotas SET fk_raza =IFNULL(?, fk_raza), fk_genero = IFNULL(?,fk_genero), fk_categoria = IFNULL(?, fk_categoria), SET image = IFNULL(?, image) WHERE id = ?`
         
         const [rows] = await pool.query(sql, [raza, genero, categoria, image, id])
 
