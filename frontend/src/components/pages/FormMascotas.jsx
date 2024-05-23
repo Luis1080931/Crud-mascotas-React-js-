@@ -8,26 +8,25 @@ import iconCamera from './../../../public/img/iconCameraPng.png'
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaAngleLeft } from "react-icons/fa6";
-import axiosClient from './../../service/axiosClient.js'
-import {MascotasContext} from './../../context/MascotasContext.jsx'
+import axiosClient from '../../service/axiosClient.js'
+import {MascotasContext} from '../../context/MascotasContext.jsx'
+import axios from 'axios';
 
 const FormMascotas = () => {
 
     const [generos, setGeneros] = useState([])
     const [razas, setRazas] = useState([])
     const [categorias, setCategorias] = useState([])
-    const [users, setUsers] = useState([])
-    const {createMascotas, updateMascotas, idMascota, mode, getMascotasId, mascota} = useContext(MascotasContext)
-    const {id} = useParams()
+    const { idMascota, mode, getMascotasId, mascota} = useContext(MascotasContext)
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
         nombre: '',
         categoria: '',
         image: '',
-        raza: "",
         genero: ''
     })
+    const [raza, setRaza] = useState('')
 
     useEffect(() => {
         axiosClient.get('/opciones/genero').then((response) => {
@@ -41,28 +40,26 @@ const FormMascotas = () => {
         axiosClient.get('/opciones/categorias').then((response) => {
             setCategorias(response.data)
         })
-
-        axiosClient.get('/opciones/users').then((response) => {
-            setUsers(response.data)
-        })
     }, [])
 
     useEffect(() => {
-        if(mode === 'update' && mascota){
+        if(mode === "update" && idMascota){
+            getMascotasId(idMascota)
+        }
+    }, [mode, idMascota])
+
+    useEffect(() => {
+        if(mascota && mode === "update" ){
             setFormData({
-                nombre: mascota.nombre_mascota,
-                categoria: mascota.categoria,
-                image: mascota.image,
-                genero: mascota.genero,
-                raza: mascota.raza
+                nombre: mascota.nombre_mascota || '',
+                categoria: mascota.categoria || '',
+                image: mascota.image || '',
+                genero: mascota.genero || ''
             })
+            setRaza(mascota.raza)
             console.log('Datos mascota:' ,mascota);
         }
     }, [mode, mascota])
-
-    useEffect(() => {
-        getMascotasId(id)
-    }, [])
 
     const handleChange = (e) => {
         const {name, value, type, files } = e.target
@@ -81,17 +78,25 @@ const FormMascotas = () => {
         e.preventDefault()
             const datosSubmit = new FormData()
             datosSubmit.append('nombre', formData.nombre)
-            datosSubmit.append('raza', formData.raza)
+            datosSubmit.append('raza', raza)
             datosSubmit.append('categoria', formData.categoria)
             datosSubmit.append('image', formData.image)
             datosSubmit.append('genero', formData.genero)
 
             try {
-                if(mode === 'update'){
+                if(mode === "update"){
                     console.log('Id de la mascota que se quiere actualizar', idMascota);
-                    await updateMascotas(idMascota, datosSubmit)
+                    axiosClient.put(`/mascotas/actualizar/${idMascota}`, datosSubmit).then((response) => {
+                        console.log(response.data)
+                        alert(response.data.message)
+                        navigate('/dashboard')
+                    })
                 }else{
-                    await createMascotas(datosSubmit)
+                    axiosClient.post(`/mascotas/registrar`, datosSubmit).then((response) => {
+                        console.log(response.data)
+                        alert(response.data.message)
+                        navigate('/dashboard')
+                    })
                 }
             } catch (error) {
             console.log('Error del servidor' + error);
@@ -110,12 +115,12 @@ const FormMascotas = () => {
                 </div>
                 <div className='mt-16'>
                 <img 
-                    className='rounded-full' 
+                    className='rounded-full w-40' 
                     src={mode === 'create' ? photoIcon : `http://localhost:3000/img/${mascota.image}`} 
                     alt="Foto de mascota" 
                 />
                 </div>
-                 <form onSubmit={handleSubmit} className='w-full max-w-sm pt-24'>
+                 <form onSubmit={handleSubmit} className='w-full max-w-sm pt-20'>
                     <div className='mb-4'>
                         <input
                             type='text'
@@ -133,14 +138,14 @@ const FormMascotas = () => {
                         <select 
                            
                             className='w-[345px] bg-[#8d9db9] px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5 placeholder-blue-950'
-                            value={formData.raza}
-                            onChange={handleChange}
+                            value={raza}
+                            onChange={(e) => setRaza(e.target.value)}
                             name="raza"
                             id="raza"
                         >
                             <option value="" hidden> Seleccione la raza... </option>
-                            {razas.map(race => (
-                                <option value={race.id_raza}> {race.nombre_raza} </option>
+                            {razas.map((race) => (
+                                <option key={race.id_raza} value={race.id_raza}> {race.nombre_raza} </option>
                             ))}
                         </select>
                     </div>
@@ -153,8 +158,8 @@ const FormMascotas = () => {
                             id=""
                         >
                             <option value="" hidden> Seleccione categoria... </option>
-                            {categorias.map(category => (
-                                <option value={category.id_categoria}> {category.nombre_categoria} </option>
+                            {categorias.map((category) => (
+                                <option key={category.id_categoria} value={category.id_categoria}> {category.nombre_categoria} </option>
                             ))}
                         </select>
                     </div>
@@ -171,44 +176,6 @@ const FormMascotas = () => {
                     htmlFor="fileInput"
                     className="cursor-pointer items-center w-[345px] flex bg-[#8d9db9] rounded-full border"
                     >
-                    {/* {formData.image ? (
-                        <div className="relative">
-                        <button
-                            type="button"
-                            className="absolute top-0 right-0 p-1 bg-gray-300 rounded-full"
-                            onClick={() => setFormData({ ...formData, image: "" })}
-                        >
-                            <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-blue-950"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                            </svg>
-                        </button>
-                        {mode === "update" && typeof formData.image === "string" ? (
-                            <img
-                            src={`http://localhost:4000/img/${formData.image}`}
-                            alt="user"
-                            className="h-28 w-28 object-cover rounded-full mx-auto"
-                            />
-                        ) : (
-                            <img
-                            src={URL.createObjectURL(formData.image)}
-                            alt="user"
-                            className="h-28 w-28 object-cover rounded-full mx-auto"
-                            />
-                        )}
-
-                        </div>
-                    ) : ( */}
                         <div className="flex items-center w-[200px] h-10 transition duration-300">
                         <span className="text-blue-950 w-full ml-4">
                             Seleccionar imagen
@@ -225,13 +192,13 @@ const FormMascotas = () => {
                             <select 
                                 className='w-[345px] bg-[#8d9db9] px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5 placeholder-blue-950'
                                 name="genero"
-                                value={mascota.genero}
+                                value={formData.genero}
                                 onChange={handleChange}
                                 id=""
                             >
                                 <option value="" hidden> Seleccione genero... </option>
-                                {generos.map(gender => (
-                                    <option value={gender.id_genero}> {gender.nombre_genero} </option>
+                                {generos.map((gender) => (
+                                    <option key={gender.id_genero} value={gender.id_genero}> {gender.nombre_genero} </option>
                                 ))}
                             </select>
                         </div>

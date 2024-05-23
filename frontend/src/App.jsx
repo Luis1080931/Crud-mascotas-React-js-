@@ -2,9 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Login from "./components/pages/Login.jsx"
 import ProtectedRoute from "./ProtectedRoute.jsx"
 import ListarMascota from "./components/pages/ListarMascota.jsx";
-import RegistrarMascota from "./components/pages/RegistrarMascota.jsx";
-import ActualizarMascota from "./components/pages/ActualizarMascota.jsx";
 import ConsultarMascota from "./components/pages/ConsultarMascota.jsx";
+import FormMascotas from "./components/pages/FormMascotas.jsx";
 import { MascotasProvider } from "./context/MascotasContext.jsx";
 import 'tailwindcss/tailwind.css';
 
@@ -22,8 +21,8 @@ function App() {
               <Route path="/" element={<Login />} />
               <Route element={<ProtectedRoute />} > 
                 <Route path="/dashboard" element={<ListarMascota />} />
-                <Route path="/register" element={<RegistrarMascota />} />
-                <Route path="/actualizar/:id" element={<ActualizarMascota />} />
+                <Route path="/register" element={<FormMascotas />} />
+                <Route path="/actualizar/:id" element={<FormMascotas />} />
                 <Route path="/consultar/:id" element={<ConsultarMascota />} />
               </Route>
             </Routes> 

@@ -29,14 +29,14 @@ const ListarMascota = () => {
     const navigate = useNavigate();
 
     const ir = () => {
-        setMode('create')
+        setMode("create")
         navigate('/register');
     };
 
     const actualizar = (id) => {
-        setMode('update')
+        setMode("update")
         navigate(`/actualizar/${id}`);
-        setIdMascota(id)
+        setIdMascota(id)    
     };
 
     const consultar = async (id) => {
@@ -102,7 +102,7 @@ const ListarMascota = () => {
                         className='flex items-center bg-slate-300 mt-4 w-[360px] rounded-2xl h-24'
                     >
                         <div>
-                            <img className='rounded-full ml-3' alt={mascota.image} src={`http://localhost:3000/img/${mascota.image}`} />
+                            <img className='rounded-full  ml-3' alt={mascota.image} src={`http://localhost:3000/img/${mascota.image}`} />
                         </div>
                         <div className='flex flex-col ml-4'>
                             <label>{mascota.nombre_mascota}</label> 
