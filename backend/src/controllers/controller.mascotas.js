@@ -73,33 +73,40 @@ export const listarMascotas = async (req, res) => {
 
 export const actualizarMascota = async (req, res) => {
     try {
-        const {id} = req.params
-        const {raza, genero, categoria } = req.body
-        let image = req.file.originalname
-
-        let sql = `UPDATE mascotas SET fk_raza =IFNULL(?, fk_raza), fk_genero = IFNULL(?,fk_genero), fk_categoria = IFNULL(?, fk_categoria), SET image = IFNULL(?, image) WHERE id = ?`
-        
-        const [rows] = await pool.query(sql, [raza, genero, categoria, image, id])
-
-        if(rows.affectedRows>0){
-            res.status(200).json({
-                status: 200,
-                message: 'Se actualizo con exito la mascota'
-            })
-        }else{
-            res.status(403).json({
-                status: 403,
-                message: 'No fue posible actualizar la mascota'
-            })
-        }
+      const { id } = req.params;
+      const { nombre, raza, genero, categoria } = req.body;
+      let image = req.file ? req.file.originalname : null;
+      const [anterior] = await pool.query(`SELECT * FROM mascotas WHERE id = ?`, [id])
+  
+      let sql = `
+        UPDATE mascotas SET 
+        nombre_mascota = ?,  
+        fk_raza = ?,  
+        fk_genero = ?,  
+        fk_categoria = ?
+      `;
+  
+      const params = [nombre || anterior[0].nombre, raza || anterior[0].raza, genero || anterior[0].genero, categoria || anterior[0].categoria];
+      
+      if (image) {
+        sql += `, image = ?`;
+        params.push(image);
+      }
+  
+      sql += ` WHERE id = ?`;
+      params.push(id);
+  
+      const [rows] = await pool.query(sql, params);
+  
+      if (rows.affectedRows > 0) {
+        res.status(200).json({message: "Mascota actualizada éxitosamente",});
+      } else {
+        res.status(404).json({message: "Error al actualizar la mascota",});
+      }
     } catch (error) {
-        res.status(500).json({
-            status: 500,
-            message: 'Error del servidor' + error
-        })
+      res.status(500).json({ message: "Error del servidor" + error,});
     }
-   
-}
+  };
 
 export const buscarMascota = async (req, res) => {
     try {
