@@ -1,14 +1,13 @@
 
 import { pool } from "./../database/conexion.js";
-import jwt from "jsonwebtoken";
-import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken"
 
 export const registrar = async (req, res) => {
     try {
       const { nombres, email, password } = req.body;
-      const bcryptPassword = bcrypt.hashSync(password, 12);
+      /* const bcryptPassword = bcrypt.hashSync(password, 12); */
       const response = await pool.query(
-        `INSERT INTO user (nombres, email, password) VALUES ('${nombres}', '${email}', '${bcryptPassword}')`
+        `INSERT INTO user (nombres, email, password) VALUES ('${nombres}', '${email}', '${password}')`
       );
       if (response.length > 0) {
         res.status(200).json("Usuario creado con exito");
@@ -20,7 +19,7 @@ export const registrar = async (req, res) => {
     }
   };
 
-export const validar = async (req, res) => {
+/* export const validar = async (req, res) => {
     try {
       const { email, password } = req.body;
       const sql = `SELECT * FROM user WHERE email = '${email}'`;
@@ -40,7 +39,30 @@ export const validar = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: "Error en el servidor" + error });
     }
-  };
+  }; */
+
+  export const validar = async (req, res) => {
+
+    try {
+
+        let {email, password} = req.body
+        let sql = `SELECT * FROM user WHERE email='${email}' and password='${password}'`
+
+        const [user] = await pool.query(sql)
+
+        if(user.length>0){
+            let token = jwt.sign({user}, process.env.AUT_SECRET, {expiresIn:process.env.AUT_EXPIRE})
+
+            return res.status(200).json({ 'user':user,'token':token})
+        }else{
+            res.status(404).json({'status': 404, 'message': 'Usuario no autorizado'})
+        }
+
+    } catch (error) {
+        res.status(500).json({status: 500, message: 'Error del servidor' + error})
+    }
+    
+}
 
 export const validarToken = async (req, res, next) => {
 

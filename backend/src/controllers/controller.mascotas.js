@@ -16,6 +16,20 @@ const storage = multer.diskStorage(
 const upload = multer({storage: storage})
 export const cargarImage = upload.single('image')
 
+const storageUploads = multer.diskStorage(
+    {
+        destination: function(req,file,cb){
+            cb(null, "uploads/imgUploads")
+        },
+        filename: function(req,file, cb){
+            cb(null, file.originalname)
+        }
+    }
+)
+
+const uploads = multer({storage: storageUploads})
+export const cargarImageUploads = uploads.single('image')
+
 export const registrarMascota = async (req, res) => {
     try {
         
@@ -112,7 +126,12 @@ export const buscarMascota = async (req, res) => {
     try {
         const {id} = req.params
 
-        let sql = `SELECT id, nombre_mascota, nombre_raza AS raza, nombre_categoria AS categoria, nombre_genero AS genero, image FROM mascotas JOIN razas ON fk_raza = id_raza JOIN categorias ON fk_categoria = id_categoria JOIN generos ON fk_genero = id_genero  WHERE id = ?`
+        let sql = `SELECT id, m.*, c.*, g.*, r.*, image 
+        FROM mascotas m 
+        JOIN razas r ON fk_raza = id_raza 
+        JOIN categorias c ON fk_categoria = id_categoria 
+        JOIN generos g ON fk_genero = id_genero 
+        WHERE id = ?`
 
         const [rows] = await pool.query(sql, [id])
         if(rows.length>0){

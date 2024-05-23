@@ -19,6 +19,7 @@ servidor.set("view engine", "ejs")
 servidor.set("views", "./view")
 
 servidor.use(express.static('./public'))
+servidor.use(express.static('./uploads'))
 
 servidor.get("/document", (req, res) => {
     res.render("document.ejs")
