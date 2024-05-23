@@ -1,6 +1,7 @@
 
 import { pool } from "./../database/conexion.js";
 import jwt from "jsonwebtoken"
+/* import bcrypt from 'bcrypt' */
 
 export const registrar = async (req, res) => {
     try {
