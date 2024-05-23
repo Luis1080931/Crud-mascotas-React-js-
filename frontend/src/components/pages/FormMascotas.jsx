@@ -24,9 +24,9 @@ const FormMascotas = () => {
         nombre: '',
         categoria: '',
         image: '',
-        genero: ''
+        genero: '',
+        raza: ''
     })
-    const [raza, setRaza] = useState('')
 
     useEffect(() => {
         axiosClient.get('/opciones/genero').then((response) => {
@@ -52,11 +52,11 @@ const FormMascotas = () => {
         if(mascota && mode === "update" ){
             setFormData({
                 nombre: mascota.nombre_mascota || '',
-                categoria: mascota.categoria || '',
+                categoria: mascota.id_categoria || '',
                 image: mascota.image || '',
-                genero: mascota.genero || ''
+                genero: mascota.id_genero || '',
+                raza: mascota.id_raza || ''
             })
-            setRaza(mascota.raza)
             console.log('Datos mascota:' ,mascota);
         }
     }, [mode, mascota])
@@ -78,7 +78,7 @@ const FormMascotas = () => {
         e.preventDefault()
             const datosSubmit = new FormData()
             datosSubmit.append('nombre', formData.nombre)
-            datosSubmit.append('raza', raza)
+            datosSubmit.append('raza', formData.raza)
             datosSubmit.append('categoria', formData.categoria)
             datosSubmit.append('image', formData.image)
             datosSubmit.append('genero', formData.genero)
@@ -103,6 +103,33 @@ const FormMascotas = () => {
         }
     }
 
+    const [imagePath, setImagePath] = useState('');
+  useEffect(() => {
+    if (mascota && mascota.image) {
+      const fetchImage = async () => {
+        const imgPath = `http://localhost:3000/img/${mascota.image}`;
+        const uploadsPath = `http://localhost:3000/imgUploads/${mascota.image}`;
+
+        try {
+          const imgResponse = await fetch(imgPath, { method: 'HEAD' });
+          if (imgResponse.ok) {
+            setImagePath(imgPath);
+          } else {
+            const uploadsResponse = await fetch(uploadsPath, { method: 'HEAD' });
+            if (uploadsResponse.ok) {
+              setImagePath(uploadsPath);
+            } else {
+              setImagePath('');
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching images:', error);
+          setImagePath('');
+        }
+      };
+      fetchImage();
+    }
+  }, [mascota]);
         return (
             <div
                 className='flex flex-col items-center min-h-screen'
@@ -113,12 +140,12 @@ const FormMascotas = () => {
                     <label className='flex mr-20 text-white font-semibold'> {mode === "create" ? "Adicionar mascota" : "Actualizar mascota"} </label>
                     <img className='flex justify-between rounded-full' src={iconClose} alt="" />
                 </div>
-                <div className='mt-16'>
-                <img 
-                    className='rounded-full w-40' 
-                    src={mode === 'create' ? photoIcon : `http://localhost:3000/img/${mascota.image}`} 
-                    alt="Foto de mascota" 
-                />
+                <div className="mt-16">
+                    {imagePath ? (
+                    <img className="rounded-full w-40" src={imagePath} alt={mascota.imagen} />
+                    ) : (
+                    <p>Imagen no disponible</p>
+                    )}
                 </div>
                  <form onSubmit={handleSubmit} className='w-full max-w-sm pt-20'>
                     <div className='mb-4'>
@@ -138,8 +165,8 @@ const FormMascotas = () => {
                         <select 
                            
                             className='w-[345px] bg-[#8d9db9] px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5 placeholder-blue-950'
-                            value={raza}
-                            onChange={(e) => setRaza(e.target.value)}
+                            value={formData.raza}
+                            onChange={handleChange}
                             name="raza"
                             id="raza"
                         >
@@ -151,7 +178,7 @@ const FormMascotas = () => {
                     </div>
                     <div className='mb-4'>
                         <select 
-                            className='w-[345px] bg-[#8d9db9] px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5 placeholder-blue-950'
+                            className='w-[345px] bg-[#818b9e] px-3 py-2 rounded-3xl border border-gray-400 bg-transparent focus:outline-none ml-5 placeholder-blue-950'
                             name="categoria"
                             value={formData.categoria}
                             onChange={handleChange}

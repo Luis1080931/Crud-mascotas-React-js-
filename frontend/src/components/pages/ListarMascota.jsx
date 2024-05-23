@@ -22,9 +22,37 @@ const ListarMascota = () => {
 
     const getMascotas = () => {
         axiosClient.get(`/mascotas/listar`).then((response) => {
-            setMascotas(response.data);
+          const mascotasConImagenes = response.data.map(async (mascota) => {
+            const imagePath = await fetchImagePath(mascota.image);
+            return { ...mascota, imagePath };
+          });
+          Promise.all(mascotasConImagenes).then(setMascotas);
         });
-    };
+      };
+    
+      const fetchImagePath = async (imagen) => {
+        if (!imagen) return '';
+    
+        const imgPath = `http://localhost:3000/img/${imagen}`;
+        const uploadsPath = `http://localhost:3000/imgUploads/${imagen}`;
+    
+        try {
+          const imgResponse = await fetch(imgPath, { method: 'HEAD' });
+          if (imgResponse.ok) {
+            return imgPath;
+          } else {
+            const uploadsResponse = await fetch(uploadsPath, { method: 'HEAD' });
+            if (uploadsResponse.ok) {
+              return uploadsPath;
+            } else {
+              return '';
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching images:', error);
+          return '';
+        }
+      };
 
     const navigate = useNavigate();
 
@@ -102,7 +130,11 @@ const ListarMascota = () => {
                         className='flex items-center bg-slate-300 mt-4 w-[360px] rounded-2xl h-24'
                     >
                         <div>
-                            <img className='rounded-full  ml-3' alt={mascota.image} src={`http://localhost:3000/img/${mascota.image}`} />
+                        <img
+                            className="object-cover rounded-full ml-2"
+                            alt={mascota.imagen}
+                            src={mascota.imagePath || 'path/to/default/image.jpg'}
+                        />
                         </div>
                         <div className='flex flex-col ml-4'>
                             <label>{mascota.nombre_mascota}</label> 

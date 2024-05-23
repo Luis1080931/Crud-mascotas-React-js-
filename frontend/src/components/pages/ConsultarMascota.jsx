@@ -65,7 +65,7 @@ const ConsultarMascota = ({ match }) => {
                         <label className='text-white text-lg font-semibold'>Raza: </label>
                     </div>
                     <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
-                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.raza} </label>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.nombre_raza} </label>
                     </div>
                 </div>
                 <div className='flex flex-row mb-2'>
@@ -73,7 +73,7 @@ const ConsultarMascota = ({ match }) => {
                         <label className='text-white text-lg font-semibold'>Categoria: </label>
                     </div>
                     <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
-                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.categoria} </label>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.nombre_categoria} </label>
                     </div>
                 </div>
                 <div className='flex flex-row mb-2'>
@@ -81,7 +81,7 @@ const ConsultarMascota = ({ match }) => {
                         <label className='text-white text-lg font-semibold'>Genero: </label>
                     </div>
                     <div className='bg-[#ABB5C7] h-10 w-56 flex justify-center items-center rounded-r-xl'>
-                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.genero} </label>
+                        <label className='text-[#2C4674] text-lg font-semibold'> {mascota.nombre_genero} </label>
                     </div>
                 </div>
 
